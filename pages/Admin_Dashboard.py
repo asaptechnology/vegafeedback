@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import openai
-from database import initialize_database, get_all_submissions
+from database import initialize_database, get_all_submissions, delete_all_submissions
 
 # Initialize the database and table
 initialize_database()
@@ -96,7 +96,23 @@ if password == ADMIN_PASSWORD:
             except Exception as e:
                 st.error(f"An error occurred during AI analysis: {e}")
 
+    # --- Danger Zone ---
+    st.subheader("⚠️ Danger Zone")
+    with st.expander("Clear Database"):
+        st.warning("This action is irreversible. All feedback data will be permanently deleted.")
+        
+        confirm_delete = st.checkbox("I understand the consequences and want to delete all feedback.")
+        
+        if st.button("Delete All Submissions", disabled=not confirm_delete):
+            try:
+                delete_all_submissions()
+                st.success("All feedback has been successfully cleared.")
+                # Use st.rerun() to refresh the page and show the empty dataframe
+                st.rerun()
+            except Exception as e:
+                st.error(f"An error occurred while clearing the database: {e}")
+
+
 elif password and password != ADMIN_PASSWORD:
     st.error("Incorrect password. Please try again.")
-
 
