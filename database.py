@@ -70,3 +70,13 @@ def get_all_submissions():
     conn.close()
     return records
 
+def delete_all_submissions():
+    """
+    Deletes all records from the submissions table.
+    """
+    conn = sqlite3.connect('feedback.db')
+    c = conn.cursor()
+    c.execute("DELETE FROM submissions")
+    conn.commit()
+    conn.close()
+
